@@ -1,0 +1,89 @@
+#!/bin/bash
+
+htbStartup=
+analise=
+goToChall=
+
+function main(){
+	parse_args "$@"
+
+	cjd 22.13
+
+	open_browers
+	generate_tempfiles 
+	open_terminals 
+}
+
+function parse_args() {
+	while :; do 
+		case "${1-}" in
+			-h | --help) usage; exit 0 ;;
+			-?*) echo -e "Opção desconhecida: ${1-}\n$(usage)\n"; exit 1 ;;
+			*) break ;;
+		esac
+	done
+}
+
+function usage() {
+	cat <<EOF
+Uso: $(basename ${BASH_SOURCE[0]}) [opções] [nome da Box]
+
+	Script de automatização do setup para fazer um HackTheBox. Se não
+	tiver uma Box setada, ele vai abrir na pasta do HTB. Se tiver, ele ou
+	abre a pasta, se ela existir, ou cria uma para a box.
+
+	Opções:
+		-h: Mostra essa tela de ajuda
+EOF
+}
+
+function open_browers() {
+	# Setando navegadores pra pesquisa e HTB
+	browsers_xid=$(tabbed -c -d)
+	surf -e $browsers_xid https://duckduckgo.com &
+	if [[ -n $1 ]]; then 
+		surf -e $browsers_xid https://app.hackthebox.com/machines/$1 &
+	else
+		surf -e $browsers_xid https://app.hackthebox.com/home &
+	fi
+}
+
+function generate_tempfiles() {
+
+	htbStartup=$(mktemp)
+	echo "source ~/.bashrc" > $htbStartup
+	echo "cjd 22.13; sudo openvpn --config lab_dundeedunds.ovpn" >> $htbStartup
+
+	goToChall=$(mktemp)
+	echo "source ~/.bashrc" > $goToChall
+	echo "cjd 22.13;" >> $goToChall
+
+	analise=$(mktemp)
+	echo "source ~/.bashrc" > $analise
+	echo "cjd 22.13;" >> $analise
+
+	# Eu quero abrir uma box
+	if [[ -n $1 ]]; then
+
+		boxPath=$(find ./ -name $1 -type d)
+		if [[ -z $boxPath ]]; then
+			mkdir $1
+			echo "touch $1/analise.md" >> $analise
+		fi
+
+		echo "cd $1;" >> $goToChall
+		echo "cd $1; vim analise.md" >> $analise
+
+	fi
+
+	echo "rm -f $htbStartup" >> $htbStartup
+	echo "rm -f $goToChall" >> $goToChall
+}
+
+function open_terminals(){
+	st -e bash --rcfile $htbStartup & 
+	st -e bash --rcfile $analise & 
+	st -e bash --rcfile $goToChall & 
+}
+
+main "$@"
