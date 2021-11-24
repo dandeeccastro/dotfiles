@@ -1,0 +1,3 @@
+#!/bin/sh
+
+cat ~/.github_pat | xclip -sel clip
