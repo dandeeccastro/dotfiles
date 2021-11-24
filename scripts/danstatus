@@ -18,7 +18,7 @@ function main() {
 } 
 
 function danbar() {
-	echo "$(gpu) $(lol) $(wifi) $(eth) $(date +'%D %T')"
+	echo "$(lol) $(eth) $(date +'%D %T')"
 }
 
 function gpu() {
@@ -34,7 +34,7 @@ function lol() {
 }
 
 function eth() {
-	echo -e "[Eth: $(ip addr show enp3s0 | awk '/inet / {print $2}')]"
+	echo -e "[Eth: $(ip addr show ens133 | awk '/inet / {print $2}')]"
 }
 
 function wifi() {

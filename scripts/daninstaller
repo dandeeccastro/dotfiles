@@ -1,0 +1,128 @@
+#!/bin/sh
+
+function main() {
+	while :; do 
+		case "${1-}" in 
+			-h | --help) usage; exit 0;;
+			-?*) echo -e "Opção desconhecida: ${1-}\n$(usage)\n"; exit 1 ;;
+		esac
+	done
+
+	# One day I'll make it parse command line stuff, but like, not today 
+	preinstall
+	custom_scripts
+	suckless
+	custom_dotfiles
+	general
+	gamer
+	programmer
+}
+
+function usage() {
+	cat <<EOF
+daninstaller: Personal Arch Post Install Script
+by Dan 
+
+Installs stuff I use on the daily 
+
+USAGE: $(basename ${BASH_SOURCE[0]}) [OPTIONS]
+
+OPTIONS:
+	-h, --help:	Gets you here
+
+EOF
+}
+
+function preinstall() {
+	# Stuff I use to install other stuff 
+	sudo pacman -Syyu 
+	echo -e "[preinstall] System update finished"
+	sudo pacman -S yay 
+	echo -e "[preinstall] Yay properly installed"
+}
+
+function custom_scripts() {
+	mkdir ~/.local/bin
+	mkdir ~/.local/functions
+	echo -e "[custom_scripts] Directories for local scripts created"
+
+	cp ~/Downloads/dotfiles/scripts/* ~/.local/bin/
+	cp ~/Downloads/dotfiles/functions/* ~/.local/functions/
+	echo -e "[custom_scripts] Custom scripts added to proper folders"
+}
+
+function suckless() {
+	mkdir ~/Downloads/suckless
+	cd ~/Downloads/suckless
+	echo -e "[suckless] suckless directory created"
+
+	git clone https://git.suckless.org/dwm
+	git clone https://git.suckless.org/st
+	git clone https://git.suckless.org/surf
+	git clone https://git.suckless.org/tabbed
+	git clone https://git.suckless.org/dmenu
+	echo -e "[suckless] tools cloned"
+
+	cd dwm
+	wget https://dwm.suckless.org/patches/fullgaps/dwm-fullgaps-6.2.diff
+	wget https://dwm.suckless.org/patches/tatami/dwm-tatami-6.2.diff
+	wget https://dwm.suckless.org/patches/fibonacci/dwm-fibonacci-6.2.diff
+	echo -e "[suckless] dwm diffs downloaded"
+
+	cd ../st 
+	wget https://st.suckless.org/patches/scrollback/st-scrollback-0.8.4.diff
+	wget https://st.suckless.org/patches/gruvbox-material/st-gruvbox-material-0.8.2.diff
+	echo -e "[suckless] st diffs downloaded"
+
+	cd ../surf
+	wget https://surf.suckless.org/patches/smoothscrolling-via-GTK3/surf-0.7-smoothscrolling.diff
+	echo -e "[suckless] surf diffs downloaded"
+
+	cd 
+}
+
+function custom_dotfiles() {
+	cat ~/Downloads/dotfiles/bashrc >> ~/.bashrc
+	cat ~/Downloads/dotfiles/xinitrc >> ~/.xinitrc
+	cat ~/Downloads/dotfiles/vimrc >> ~/.vimrc
+
+	mkdir ~/.config/nvim
+	touch ~/.config/nvim/init.vim
+	cat ~/Downloads/dotfiles/init.vim >> ~/.config/nvim/init.vim
+
+	echo -e "[custom_dotfiles] custom dotfiles appended to existing configs "
+}
+
+function gamer() {
+	sudo pacman -S steam lutris gamemode wine-staging vkd3d 
+	sudo yay -S leagueoflegends-git 
+	echo -e "[gamer] Gamer stuff added"
+}
+
+function general() {
+	sudo pacman -S xournalpp krita brave webapp-manager obs-studio 
+	sudo yay -S librewolf-bin obsidian 
+	echo -e "[general] General usage software added"
+}
+
+function programmer () {
+	sudo pacman -S neovim
+	sudo yay -S asdf-vm 
+	echo -e "[general] Programmer stuff added"
+}
+
+function asdf_langs() {
+	asdf plugin add python
+	asdf plugin add java
+	asdf plugin add rust 
+	asdf plugin add R
+	echo -e "[asdf_langs] Plugins added"
+
+	asdf install python 3.10.0
+	asdf install java openjdk-16
+	asdf install rust latest 
+	asdf install R latest 
+	echo -e "[asdf_langs] Languages installed"
+}
+
+main "$@"
