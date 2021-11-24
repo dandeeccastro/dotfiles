@@ -5,6 +5,7 @@ function main() {
 		case "${1-}" in 
 			-h | --help) usage; exit 0;;
 			-?*) echo -e "Opção desconhecida: ${1-}\n$(usage)\n"; exit 1 ;;
+			*) break ;;
 		esac
 	done
 
@@ -37,11 +38,10 @@ function preinstall() {
 	# Stuff I use to install other stuff 
 	sudo pacman -Syyu 
 	echo -e "[preinstall] System update finished"
-	sudo pacman -S yay 
-	echo -e "[preinstall] Yay properly installed"
 }
 
 function custom_scripts() {
+	mkdir ~/.local/
 	mkdir ~/.local/bin
 	mkdir ~/.local/functions
 	echo -e "[custom_scripts] Directories for local scripts created"
@@ -62,33 +62,19 @@ function suckless() {
 	git clone https://git.suckless.org/tabbed
 	git clone https://git.suckless.org/dmenu
 	echo -e "[suckless] tools cloned"
-
-	cd dwm
-	wget https://dwm.suckless.org/patches/fullgaps/dwm-fullgaps-6.2.diff
-	wget https://dwm.suckless.org/patches/tatami/dwm-tatami-6.2.diff
-	wget https://dwm.suckless.org/patches/fibonacci/dwm-fibonacci-6.2.diff
-	echo -e "[suckless] dwm diffs downloaded"
-
-	cd ../st 
-	wget https://st.suckless.org/patches/scrollback/st-scrollback-0.8.4.diff
-	wget https://st.suckless.org/patches/gruvbox-material/st-gruvbox-material-0.8.2.diff
-	echo -e "[suckless] st diffs downloaded"
-
-	cd ../surf
-	wget https://surf.suckless.org/patches/smoothscrolling-via-GTK3/surf-0.7-smoothscrolling.diff
-	echo -e "[suckless] surf diffs downloaded"
-
-	cd 
 }
 
 function custom_dotfiles() {
 	cat ~/Downloads/dotfiles/bashrc >> ~/.bashrc
 	cat ~/Downloads/dotfiles/xinitrc >> ~/.xinitrc
-	cat ~/Downloads/dotfiles/vimrc >> ~/.vimrc
 
 	mkdir ~/.config/nvim
 	touch ~/.config/nvim/init.vim
 	cat ~/Downloads/dotfiles/init.vim >> ~/.config/nvim/init.vim
+
+	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+
 
 	echo -e "[custom_dotfiles] custom dotfiles appended to existing configs "
 }
@@ -100,7 +86,7 @@ function gamer() {
 }
 
 function general() {
-	sudo pacman -S xournalpp krita brave webapp-manager obs-studio 
+	sudo pacman -S xournalpp krita webapp-manager obs-studio 
 	sudo yay -S librewolf-bin obsidian 
 	echo -e "[general] General usage software added"
 }
