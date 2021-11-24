@@ -9,7 +9,6 @@
 export PATH="$HOME/.local/bin:$PATH"
 
 # Setando variáveis do ASDF (tem que ficar no final) 
-. $HOME/.asdf/asdf.sh
-. $HOME/.asdf/completions/asdf.bash
+. /opt/asdf-vm/.asdf/asdf.sh
 
 . $HOME/.local/functions/*
