@@ -38,6 +38,22 @@ function preinstall() {
 	# Stuff I use to install other stuff 
 	sudo pacman -Syyu 
 	echo -e "[preinstall] System update finished"
+
+	sudo pacman -S wget curl
+	sudo pacman -S --needed base-devel 
+	echo -e "[preinstall] Base packages"
+
+	cd ~/Downloads
+	git clone https://aur.archlinux.org/yay.git
+	cd yay
+	makepkg -si 
+	echo -e "[preinstall] Yay installed"
+	cd ..
+
+	git clone https://github.com/ryanoasis/nerd-fonts --depth 1
+	cd nerd-fonts 
+	./install.sh FiraMono
+	echo -e "[preinstall] fonts installed"
 }
 
 function custom_scripts() {
@@ -62,6 +78,46 @@ function suckless() {
 	git clone https://git.suckless.org/tabbed
 	git clone https://git.suckless.org/dmenu
 	echo -e "[suckless] tools cloned"
+
+	sudo echo <<EOF
+[Desktop Entry]	
+Name=dwm
+Comment=O brabo
+Exec=dwmlauncher
+Type=Application
+EOF 
+>> /usr/share/xsessions/dwm.desktop
+	echo -e "[suckless] desktop file for suckless has been added"
+
+	cd dwm
+	cp ~/Downloads/dotfiles/dandwm.diff
+	patch < dandwm.diff
+	cp config.def.h config.h
+	sudo make clean install 
+	cd ..
+
+	cd st
+	cp ~/Downloads/dotfiles/danst.diff
+	patch < danst.diff
+	cp config.def.h config.h
+	sudo make clean install 
+	cd ..
+
+	cd surf
+	cp config.def.h config.h
+	sudo make clean install 
+	cd ..
+
+	cd dmenu
+	cp config.def.h config.h
+	sudo make clean install 
+	cd ..
+
+	cd tabbed
+	cp config.def.h config.h
+	sudo make clean install 
+	cd ..
+
 }
 
 function custom_dotfiles() {
@@ -74,26 +130,24 @@ function custom_dotfiles() {
 
 	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-
-
 	echo -e "[custom_dotfiles] custom dotfiles appended to existing configs "
 }
 
 function gamer() {
 	sudo pacman -S steam lutris gamemode wine-staging vkd3d 
-	sudo yay -S leagueoflegends-git 
+	# sudo yay -S leagueoflegends-git 
 	echo -e "[gamer] Gamer stuff added"
 }
 
 function general() {
 	sudo pacman -S xournalpp krita webapp-manager obs-studio 
-	sudo yay -S librewolf-bin obsidian 
+	yes | sudo yay -S --no-confirm librewolf-bin obsidian 
 	echo -e "[general] General usage software added"
 }
 
 function programmer () {
 	sudo pacman -S neovim
-	sudo yay -S asdf-vm 
+	yes | sudo yay -S --no-confirm asdf-vm 
 	echo -e "[general] Programmer stuff added"
 }
 
