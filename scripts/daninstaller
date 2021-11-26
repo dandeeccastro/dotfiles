@@ -116,6 +116,7 @@ EOF
 function custom_dotfiles() {
 	cat ~/Downloads/dotfiles/bashrc >> ~/.bashrc
 	cat ~/Downloads/dotfiles/xinitrc >> ~/.xinitrc
+	cat ~/Downloads/dotfiles/sxhkd_dwm >> ~/.config/sxhkd/dwm 
 
 	mkdir ~/.config/nvim
 	touch ~/.config/nvim/init.vim
