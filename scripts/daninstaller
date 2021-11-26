@@ -12,7 +12,6 @@ function main() {
 	# One day I'll make it parse command line stuff, but like, not today 
 	preinstall
 	custom_scripts
-	suckless
 	custom_dotfiles
 	general
 	gamer
@@ -60,63 +59,8 @@ function custom_scripts() {
 	echo -e "[custom_scripts] Custom scripts added to proper folders"
 }
 
-function suckless() {
-	mkdir ~/Downloads/suckless
-	cd ~/Downloads/suckless
-	echo -e "[suckless] suckless directory created"
-
-	git clone https://git.suckless.org/dwm
-	git clone https://git.suckless.org/st
-	git clone https://git.suckless.org/surf
-	git clone https://git.suckless.org/tabbed
-	git clone https://git.suckless.org/dmenu
-	echo -e "[suckless] tools cloned"
-
-	sudo echo <<EOF
-[Desktop Entry]	
-Name=dwm
-Comment=O brabo
-Exec=dwmlauncher
-Type=Application
-EOF 
->> /usr/share/xsessions/dwm.desktop
-	echo -e "[suckless] desktop file for suckless has been added"
-
-	cd dwm
-	cp ~/Downloads/dotfiles/dandwm.diff
-	patch < dandwm.diff
-	cp config.def.h config.h
-	sudo make clean install 
-	cd ..
-
-	cd st
-	cp ~/Downloads/dotfiles/danst.diff
-	patch < danst.diff
-	cp config.def.h config.h
-	sudo make clean install 
-	cd ..
-
-	cd surf
-	cp config.def.h config.h
-	sudo make clean install 
-	cd ..
-
-	cd dmenu
-	cp config.def.h config.h
-	sudo make clean install 
-	cd ..
-
-	cd tabbed
-	cp config.def.h config.h
-	sudo make clean install 
-	cd ..
-
-}
-
 function custom_dotfiles() {
 	cat ~/Downloads/dotfiles/bashrc >> ~/.bashrc
-	cat ~/Downloads/dotfiles/xinitrc >> ~/.xinitrc
-	cat ~/Downloads/dotfiles/sxhkd_dwm >> ~/.config/sxhkd/dwm 
 
 	mkdir ~/.config/nvim
 	touch ~/.config/nvim/init.vim
@@ -135,13 +79,13 @@ function gamer() {
 
 function general() {
 	sudo pacman -S xournalpp krita webapp-manager obs-studio 
-	yes | sudo paru -S --no-confirm librewolf-bin obsidian 
+	sudo paru -S librewolf-bin obsidian 
 	echo -e "[general] General usage software added"
 }
 
 function programmer () {
 	sudo pacman -S neovim
-	yes | sudo paru -S --no-confirm asdf-vm 
+	sudo paru -S asdf-vm 
 	echo -e "[general] Programmer stuff added"
 }
 
