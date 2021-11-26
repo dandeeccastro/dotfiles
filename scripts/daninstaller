@@ -43,13 +43,6 @@ function preinstall() {
 	sudo pacman -S --needed base-devel 
 	echo -e "[preinstall] Base packages"
 
-	cd ~/Downloads
-	git clone https://aur.archlinux.org/yay.git
-	cd yay
-	makepkg -si 
-	echo -e "[preinstall] Yay installed"
-	cd ..
-
 	git clone https://github.com/ryanoasis/nerd-fonts --depth 1
 	cd nerd-fonts 
 	./install.sh FiraMono
@@ -135,19 +128,19 @@ function custom_dotfiles() {
 
 function gamer() {
 	sudo pacman -S steam lutris gamemode wine-staging vkd3d 
-	# sudo yay -S leagueoflegends-git 
+	# sudo paru -S leagueoflegends-git 
 	echo -e "[gamer] Gamer stuff added"
 }
 
 function general() {
 	sudo pacman -S xournalpp krita webapp-manager obs-studio 
-	yes | sudo yay -S --no-confirm librewolf-bin obsidian 
+	yes | sudo paru -S --no-confirm librewolf-bin obsidian 
 	echo -e "[general] General usage software added"
 }
 
 function programmer () {
 	sudo pacman -S neovim
-	yes | sudo yay -S --no-confirm asdf-vm 
+	yes | sudo paru -S --no-confirm asdf-vm 
 	echo -e "[general] Programmer stuff added"
 }
 
