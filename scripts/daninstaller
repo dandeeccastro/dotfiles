@@ -45,6 +45,7 @@ function preinstall() {
 	git clone https://github.com/ryanoasis/nerd-fonts --depth 1
 	cd nerd-fonts 
 	./install.sh FiraMono
+	./install.sh Iosevka 
 	echo -e "[preinstall] fonts installed"
 }
 
@@ -79,13 +80,13 @@ function gamer() {
 
 function general() {
 	sudo pacman -S xournalpp krita webapp-manager obs-studio 
-	sudo paru -S librewolf-bin obsidian 
+	paru -S librewolf-bin obsidian 
 	echo -e "[general] General usage software added"
 }
 
 function programmer () {
 	sudo pacman -S neovim
-	sudo paru -S asdf-vm 
+	paru -S asdf-vm 
 	echo -e "[general] Programmer stuff added"
 }
 
