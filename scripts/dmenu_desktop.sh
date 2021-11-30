@@ -1,5 +1,4 @@
 #!/bin/bash
-
 Sys=$(find /usr/share/applications -type f -name "*.desktop" -ls | tr -s ' ' | cut -d' ' -f12-)
 Loc=$(find /usr/local/share/applications -type f -name "*.desktop" -ls |tr -s ' ' | cut -d' ' -f12-)
 Usr=$(find $HOME/.local/share/applications -type f -name "*.desktop" -ls |tr -s ' ' | cut -d' ' -f12-)
@@ -15,7 +14,7 @@ function get_desktop_filename( ) {
 Result=$(
 	echo -e "$Sys\n$Usr\n$Loc" | while read Line; do 
 		get_desktop_name "$Line" 
-	done | dmenu -fn "Iosevka:size=10" -nb "#222222" -nf "#666666" -sb "#f5951d"
+	done | dmenu $@ # -fn "Iosevka:size=10" -nb "#222222" -nf "#666666" -sb "#f5951d"
 )
 
 echo -e "$Sys\n$Usr\n$Loc" | while read Line; do 
@@ -24,5 +23,3 @@ echo -e "$Sys\n$Usr\n$Loc" | while read Line; do
 		break
 	fi
 done 
-
-echo $Result
