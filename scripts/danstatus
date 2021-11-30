@@ -1,44 +1,59 @@
 #!/bin/bash
 
-function main() { 
-
-	while :; do
-		case "${1-}" in
-			-h | --help) usage; exit 0;;
-			-d | --debug) danbar; exit 0;; 
-			-?*) echo 'Mano'; exit 1 ;;
-			*) break ;;
-		esac
+function main() {
+	while true; do 
+		xsetroot -name "$(danbar)"
+		sleep 1
 	done
 
-	while true; do
-		xsetroot -name "$(danbar)"
-		sleep 2
-	done 
-} 
-
-function danbar() {
-	echo "$(lol) $(eth) $(date +'%D %T')"
 }
 
-function gpu() {
+function debug() {
+	danbar 
+}
+
+function gpu_mode() {
 	optimus-manager --print-mode | awk '{print "[GPU: " $5 "]"}'
 }
 
-function lol() {
-	if [[ $(sysctl abi.vsyscall32 | awk '/abi.vsyscall32 =/ {print $3}') == "0" ]]; then 
-		echo -e "[LoL: Ok]"
-	else 
-		echo -e "[LoL: Nope]"
+function wlan_ip() {
+	Res=$(ip addr show wlp2s0 | grep -m 1 inet)
+	if [[ -n $Res ]]; then
+		echo $Res | awk -F ' ' '{ print "[Wlan: " $2  "]"} '
+	else
+		echo "[Wlan: off]"
+	fi 
+}
+
+function eth_ip() {
+	Res=$(ip addr show enp3s0 | grep -m 1 inet)
+	if [[ -n $Res ]]; then
+		echo $Res | awk -F ' ' '{ print "[Eth: " $2 "]"}'
+	else
+		echo "[Eth: off]"
 	fi
 }
 
-function eth() {
-	echo -e "[Eth: $(ip addr show ens133 | awk '/inet / {print $2}')]"
+function lol_abi() {
+	Abi=$(sysctl abi.vsyscall32 | awk -F '=' '{ print $2 }')
+	if [[ $Abi == '0' ]]; then
+		echo "[Lol: Ok]"
+	else
+		echo "[Lol: No]"
+	fi
 }
 
-function wifi() {
-	echo -e "[Wifi: $(iwgetid -r) $(ip addr show wlp2s0 | awk '/inet / {print $2}')]" 
+function dan_date() {
+	date +"%X %x"
+}
+
+function danbar() {
+	Gpu=$( gpu_mode )
+	Wlan=$( wlan_ip )
+	Eth=$( eth_ip )
+	Lol=$( lol_abi )
+
+	echo "$Gpu $Wlan $Eth $Lol $(dan_date)"
 }
 
 main "$@"
