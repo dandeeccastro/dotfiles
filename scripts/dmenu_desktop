@@ -1,0 +1,41 @@
+#!/bin/python
+import os
+import subprocess
+
+user = os.getlogin()
+paths = [
+	'/usr/share/applications',
+	'/usr/local/share/applications',
+	'/home/{}/.local/share/applications'.format(user)
+]
+
+files = []
+for path in paths:
+	try:
+		for file in os.listdir(path):
+			filename = "{}/{}".format(path,file)
+			bb = open(filename)
+
+			for line in bb:
+				if "Name=" in line:
+					program_name = line.rstrip()[5:]
+					break
+
+			files.append([file,program_name])
+	except :
+		continue
+
+program_name_str = ""
+for pname in files:
+	program_name_str += pname[1] + '\n'
+
+temp = subprocess.Popen(["dmenu","-i"],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
+temp.communicate(bytes(program_name_str,encoding="utf-8"))
+result = str(temp.communicate()[0],'UTF-8').rstrip()
+
+for pname in files:
+	if result == pname[1]:
+		result = pname[0]
+		break
+
+subprocess.run(["gtk-launch",result])
