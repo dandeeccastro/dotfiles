@@ -1,2 +1,6 @@
 #!/bin/bash
+case $BUTTON in
+	4) st -e vim $HOME/.local/bin/statusbar/bar-date ;;
+esac
+
 date +"%X %x"

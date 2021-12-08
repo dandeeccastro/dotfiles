@@ -1,12 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 case $BUTTON in
-	1) sysctl -w abi.vsyscall32=0 ;; 
-	4) st -e vim /usr/local/bin/bar-lol;;
+	1) sudo sysctl -w abi.vsyscall32=0 ;; 
+	4) st -e vim $HOME/.local/bin/statusbar/bar-lol ;;
 esac
 
-Abi=$(sysctl abi.vsyscall32 | awk -F '=' '{ print $2 }')
-if [[ $Abi == '0' ]]; then
-	echo "[Lol: Ok]"
-else
-	echo "[Lol: No]"
-fi
+LEAGUE=$(sysctl abi.vsyscall32 | cut -d'=' -f2)
+RESULT=$(if [ $LEAGUE == '0' ]; then echo -e "[LoL: Yes]"; else echo -e "[LoL: No]";fi)
+
+echo $RESULT

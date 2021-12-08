@@ -1,6 +1,6 @@
 #!/bin/bash
 case $BUTTON in
-	4) st -e vim $HOME/.local/bin/bar-gpu ;;
+	4) st -e vim $HOME/.local/bin/statusbar/bar-gpu ;;
 esac
 
 MODE=$(optimus-manager --print-mode | awk '{print $5}')
