@@ -9,10 +9,13 @@ function main() {
 		esac
 	done
 
+	cd ~/Downloads
+
 	# One day I'll make it parse command line stuff, but like, not today 
 	preinstall
 	custom_scripts
 	custom_dotfiles
+	suckless
 	general
 	gamer
 	programmer
@@ -42,10 +45,11 @@ function preinstall() {
 	sudo pacman -S --needed base-devel 
 	echo -e "[preinstall] Base packages"
 
-	git clone https://github.com/ryanoasis/nerd-fonts --depth 1
+	git clone https://github.com/ryanoasis/nerd-fonts --depth=1
 	cd nerd-fonts 
 	./install.sh FiraMono
 	./install.sh Iosevka 
+	./install.sh Anonymice 
 	echo -e "[preinstall] fonts installed"
 }
 
@@ -55,8 +59,8 @@ function custom_scripts() {
 	mkdir ~/.local/functions
 	echo -e "[custom_scripts] Directories for local scripts created"
 
-	cp ~/Downloads/dotfiles/scripts/* ~/.local/bin/
-	cp ~/Downloads/dotfiles/functions/* ~/.local/functions/
+	cp -r ~/Downloads/dotfiles/scripts/* ~/.local/bin/
+	cp -r ~/Downloads/dotfiles/functions/* ~/.local/functions/
 	echo -e "[custom_scripts] Custom scripts added to proper folders"
 }
 
@@ -69,7 +73,24 @@ function custom_dotfiles() {
 
 	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+
+	mkdir ~/.config/picom
+	cp ~/Downloads/dotfiles/picom.conf ~/.config/picom/picom.conf
+	
+	cp ~/Downloads/dotfiles/picom.conf ~/.Xresources 
 	echo -e "[custom_dotfiles] custom dotfiles appended to existing configs "
+}
+
+function suckless() {
+	cd Dowloads 
+	git clone https://github.com/dandeeccastro/suckless
+	cd suckless
+
+	for Dir in $(ls -d  */); do
+		cd $Dir
+		sudo make clean install 
+		cd ..
+	done
 }
 
 function gamer() {

@@ -1,8 +1,0 @@
-#!/bin/bash
-
-polkit-dumb-agent & 
-danstatus & 
-sxhkd -c /home/dundee/.config/sxhkd/dwm & 
-feh --bg-fill /usr/share/backgrounds/bspwm/wall.png
-picom &
-exec dwm

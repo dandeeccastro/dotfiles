@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Tu precisa meter um source nisso, senão ele vai rodar o comando
-# numa shell filha e isso vai fazer com que o diretório não mude 
 function cjd() {
 	if [[ -n $1 ]]; then
 		if [[ -n $(echo $1 | grep -E '^[0-9]0$') ]]; then
