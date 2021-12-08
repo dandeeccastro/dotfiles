@@ -1,4 +1,4 @@
-#Dotfiles 
+# Dotfiles 
 
 My config files and personal scripts I use on a daily basis, as well as a bash script for quick installation of my setup on Arch Linux based systems.
 
