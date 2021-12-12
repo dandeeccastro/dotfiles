@@ -4,4 +4,4 @@ case $BUTTON in
 esac
 
 MODE=$(optimus-manager --print-mode | awk '{print $5}')
-echo -e "[GPU: $MODE]"
+echo -e $MODE

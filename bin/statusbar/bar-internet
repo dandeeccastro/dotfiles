@@ -8,6 +8,6 @@ echo $CONNECTIONS | while read -r LINE; do
 	TYPE=$(echo $LINE | cut -d' ' -f1 )
 	DEV=$(echo $LINE | cut -d' ' -f2 )
 	IP=$(ip addr show $DEV | grep "inet" -m1 | awk -F ' ' '{print $2}')
-	echo -e "[$TYPE: $IP]"
+	echo -e "$IP "
 done
 

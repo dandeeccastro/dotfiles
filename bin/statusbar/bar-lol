@@ -5,6 +5,6 @@ case $BUTTON in
 esac
 
 LEAGUE=$(sysctl abi.vsyscall32 | cut -d'=' -f2)
-RESULT=$(if [ $LEAGUE == '0' ]; then echo -e "[LoL: Yes]"; else echo -e "[LoL: No]";fi)
+RESULT=$(if [ $LEAGUE == '0' ]; then echo -e "Yes"; else echo -e "No";fi)
 
 echo $RESULT
