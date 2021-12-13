@@ -1,7 +1,21 @@
 #!/bin/bash
+function change() {
+	FONT=$(xgetres dwm.font)
+	NORMFGCOL=$(xgetres dwm.foreground)
+	NORMBGCOL=$(xgetres dwm.background)
+	SELFGCOL=$(xgetres dwm.selbordercolor)
+	SELBGCOL=$(xgetres dwm.color8)
+	RESULT=$(echo -e "integrated\nhybrid\nnvidia" | dmenu -i -fn $FONT -sb $SELBGCOL -sf $SELFGCOL -nb $NORMBGCOL -nf $NORMFGCOL)
+	if [[ -n $RESULT ]]; then
+		optimus-manager --switch $RESULT --no-confirm
+	fi
+}
+
 case $BUTTON in
+	1) change ;;
 	4) st -e vim $HOME/.local/bin/statusbar/bar-gpu ;;
 esac
+
 
 MODE=$(optimus-manager --print-mode | awk '{print $5}')
 echo -e $MODE

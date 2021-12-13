@@ -1,0 +1,26 @@
+#!/bin/bash
+
+IS_MOUNTED=$( mount -l | grep sshfs )
+
+function change() {
+	if [[ -n $IS_MOUNTED ]]; then
+		fusermount3 -u ~/Documentos
+	else
+		sshfs dundee@192.168.15.18:/home/dundee/Documentos /home/daniloc/Documentos/
+	fi
+}
+
+function show(){
+	if [[ -n $IS_MOUNTED ]]; then
+		echo "On"
+	else
+		echo "Off"
+	fi
+}
+
+case $BUTTON in
+	1) change ;;
+	4) st -e vim ~/.local/bin/statusbar/bar-sshfs ;;
+esac
+
+show
