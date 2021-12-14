@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [[ -n $1 ]]; then
+	find ~/Documentos  -maxdepth 3 -type d -name "$1*" -not -path '*/\.*'| head -n 1
+fi 

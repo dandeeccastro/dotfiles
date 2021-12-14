@@ -1,0 +1,26 @@
+#!/bin/bash
+
+function run_or_stop() {
+	BOTPID=$(ps axf | grep bot.py | grep -v grep | cut -d' ' -f3)
+	if [[ -z $BOTPID ]]; then
+		notify-send "Cheguei no roda bot"
+		nohup python "$(pwjd 27.11)"/bot.py 1> $HOME/.local/bot.log & 
+		notify-send "Passei do roda bot"
+		( nohup tail -F bot.log & ) | while read -r LINE; do
+			notify-send "Biribinha" $LINE
+		done
+	else
+		pkill -9 $BOTPID
+	fi
+}
+
+case $BUTTON in
+	1) run_or_stop ;;
+	4) st -e vim ~/.local/bin/statusbar/bar-bot ;;
+esac
+
+if [[ -z $(ps axf | grep bot.py | grep -v grep | cut -d' ' -f3) ]]; then 
+	echo "Down" 
+else 
+	echo "Up"
+fi
