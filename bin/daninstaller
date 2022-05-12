@@ -1,32 +1,27 @@
 #!/bin/sh
 
+SOURCE_DIR="../"
+
 function main() {
 	while :; do 
 		case "${1-}" in 
+			-d | --dir) SOURCE_DIR=$2; shift 2 ;;
 			-h | --help) usage; exit 0;;
-			-?*) echo -e "Opção desconhecida: ${1-}\n$(usage)\n"; exit 1 ;;
+			-?*) echo -e "Unknown option: ${1-}\n$(usage)\n"; exit 1 ;;
 			*) break ;;
 		esac
 	done
 
-	cd ~/Downloads
-
-	# One day I'll make it parse command line stuff, but like, not today 
-	preinstall
-	custom_scripts
-	custom_dotfiles
-	suckless
-	general
-	gamer
-	programmer
+	echo "$SOURCE_DIR"
 }
 
 function usage() {
 	cat <<EOF
 daninstaller: Personal Arch Post Install Script
-by Dan 
+						~ by dandeeccastro 
 
-Installs stuff I use on the daily 
+Installs stuff I use on the daily, sets up config files
+and makes my life happier 
 
 USAGE: $(basename ${BASH_SOURCE[0]}) [OPTIONS]
 
@@ -36,93 +31,43 @@ OPTIONS:
 EOF
 }
 
-function preinstall() {
-	# Stuff I use to install other stuff 
-	sudo pacman -Syyu 
-	echo -e "[preinstall] System update finished"
-
-	sudo pacman -S wget curl
-	sudo pacman -S --needed base-devel 
-	echo -e "[preinstall] Base packages"
-
-	git clone https://github.com/ryanoasis/nerd-fonts --depth=1
-	cd nerd-fonts 
-	./install.sh FiraMono
-	./install.sh Iosevka 
-	./install.sh Anonymice 
-	echo -e "[preinstall] fonts installed"
+function install_custom_scripts() {
+	install -Dm644 $SOURCE_DIR/bin ~/.local/bin
+	install -Dm644 $SOURCE_DIR/functions ~/.local/functions
+	echo -e "[daninstaller:install_custom_scripts] .local/bin and .local/functions set!"
 }
 
-function custom_scripts() {
-	mkdir ~/.local/
-	mkdir ~/.local/bin
-	mkdir ~/.local/functions
-	echo -e "[custom_scripts] Directories for local scripts created"
-
-	cp -r ~/Downloads/dotfiles/scripts/* ~/.local/bin/
-	cp -r ~/Downloads/dotfiles/functions/* ~/.local/functions/
-	echo -e "[custom_scripts] Custom scripts added to proper folders"
+function copy_config_files() {
+	install -Dm644 $SOURCE_DIR/bashrc ~/.bashrc
+	install -Dm644 $SOURCE_DIR/init.vim ~/.config/nvim/init.vim
+	install -Dm644 $SOURCE_DIR/vimrc ~/.vimrc
+	install -Dm644 $SOURCE_DIR/Xresources ~/.Xresources
+	echo -e "[daninstaller:copy_config_files] VIM, NEOVIM, bash and Xresources set!"
 }
 
-function custom_dotfiles() {
-	cat ~/Downloads/dotfiles/bashrc >> ~/.bashrc
+function install_aur_wrapper() {
+	git clone https://aur.archlinux.org/paru.git
 
-	mkdir ~/.config/nvim
-	touch ~/.config/nvim/init.vim
-	cat ~/Downloads/dotfiles/init.vim >> ~/.config/nvim/init.vim
-
-	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-
-	mkdir ~/.config/picom
-	cp ~/Downloads/dotfiles/picom.conf ~/.config/picom/picom.conf
-	
-	cp ~/Downloads/dotfiles/picom.conf ~/.Xresources 
-	echo -e "[custom_dotfiles] custom dotfiles appended to existing configs "
+	cd paru
+	makepkg -si 
+	cd ..
+	echo -e "[daninstaller:install_aur_wrapper] paru AUR Wrapper installed!"
 }
 
-function suckless() {
-	cd Dowloads 
-	git clone https://github.com/dandeeccastro/suckless
-	cd suckless
+function install_suckless_utilities() {
+	git clone https://github.com/dandeeccastro/dwm
+	git clone https://github.com/dandeeccastro/st
+	git clone https://github.com/dandeeccastro/dwmblocks
 
-	for Dir in $(ls -d  */); do
-		cd $Dir
-		sudo make clean install 
-		cd ..
-	done
-}
+	cd dwm
+	make clean install
+	cd ..
+	echo -e "[daninstaller:install_suckless_utilities] DWM sucessfully compiled"
 
-function gamer() {
-	sudo pacman -S steam lutris gamemode wine-staging vkd3d 
-	# sudo paru -S leagueoflegends-git 
-	echo -e "[gamer] Gamer stuff added"
-}
-
-function general() {
-	sudo pacman -S xournalpp krita webapp-manager obs-studio 
-	paru -S librewolf-bin obsidian 
-	echo -e "[general] General usage software added"
-}
-
-function programmer () {
-	sudo pacman -S neovim
-	paru -S asdf-vm 
-	echo -e "[general] Programmer stuff added"
-}
-
-function asdf_langs() {
-	asdf plugin add python
-	asdf plugin add java
-	asdf plugin add rust 
-	asdf plugin add R
-	echo -e "[asdf_langs] Plugins added"
-
-	asdf install python 3.10.0
-	asdf install java openjdk-16
-	asdf install rust latest 
-	asdf install R latest 
-	echo -e "[asdf_langs] Languages installed"
+	cd st 
+	make clean install 
+	cd ..
+	echo -e "[daninstaller:install_suckless_utilities] ST sucessfully compiled"
 }
 
 main "$@"
