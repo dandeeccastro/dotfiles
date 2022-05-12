@@ -1,15 +1,14 @@
-! Configurações DWM
-dwm.font: Iosevka:size=10
-dwm.dmenufont: Iosevka:size=10
+! DWM Specific 
+dwm.font: 			Iosevka:size=10
+dwm.dmenufont: 		Iosevka:size=10
 
 dwm.selbordercolor: #7e705a
-dwm.selbgcolor: #3b3228
+dwm.selbgcolor: 	#3b3228
 
+! ST Specific
+st.font: 			mononoki Nerd Font Mono:pixelsize=12:antialias=true:autohint=true
 
-! Configurações ST
-st.font: Anonymice Nerd Font Mono:pixelsize=12:antialias=true:autohint=true
-
-! Tema: mocha(terminal.sexy)
+! Mocha Theme (terminal.sexy)
 *.foreground:   #d0c8c6
 *.background:   #3b3228
 *.cursorColor:  #d0c8c6
